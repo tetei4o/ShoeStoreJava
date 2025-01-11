@@ -13,9 +13,9 @@ public class CartItem {
     @JoinColumn(name = "cart_id", nullable = false)
     private ShoppingCart cart;
 
-    //@ManyToOne
-    //@JoinColumn(name = "shoe_id", nullable = false)
-    //private Shoe shoe;
+    @ManyToOne
+    @JoinColumn(name = "shoe_id", nullable = false)
+    private Shoe shoe;
 
     private int quantity;
 }
