@@ -2,7 +2,6 @@ package org.example.shoestorejava.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.engine.jdbc.Size;
 
 @Data
 @Entity
@@ -23,6 +22,10 @@ public class Shoe {
     private Category category;
 
     private Integer stockQuantity;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

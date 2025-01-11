@@ -6,7 +6,6 @@ public class UserDTO {
     private String firstName;
     private String lastName;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

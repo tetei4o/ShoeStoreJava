@@ -3,8 +3,9 @@ package org.example.shoestorejava.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cart_items")
-public class CartItem {
+@Table(name = "order_items")
+public class OrderItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,10 +15,12 @@ public class CartItem {
     private Shoe shoe;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id", nullable = false)
-    private ShoppingCart shoppingCart;
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     private Integer quantity;
+
+    private Double price;
 
     public Long getId() {
         return id;
@@ -35,12 +38,12 @@ public class CartItem {
         this.shoe = shoe;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Integer getQuantity() {
@@ -49,5 +52,13 @@ public class CartItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

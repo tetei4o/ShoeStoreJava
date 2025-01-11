@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface ShoeRepository extends JpaRepository<Shoe, Long> {
     List<Shoe> findByCategoryName(String categoryName);
+
     List<Shoe> findByBrand(String brand);
 
 }
