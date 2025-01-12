@@ -28,19 +28,15 @@ public class UserService {
         if (userRepository.existsByEmail(registrationDTO.getEmail())) {
             throw new RuntimeException("Email already registered");
         }
-
         User user = new User();
         user.setEmail(registrationDTO.getEmail());
         user.setPassword(registrationDTO.getPassword());
         user.setFirstName(registrationDTO.getFirstName());
         user.setLastName(registrationDTO.getLastName());
-
         user = userRepository.save(user);
-
         ShoppingCart cart = new ShoppingCart();
         cart.setUser(user);
         cartRepository.save(cart);
-
         return user;
     }
 

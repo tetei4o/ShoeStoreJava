@@ -12,3 +12,7 @@ INSERT INTO shoes (id, name, brand, price, stock_quantity, category_id) VALUES
 INSERT INTO users (email, password, first_name, last_name) VALUES
                                                                ('victormitev23@gmail.com','parola123','Victor','Mitev'),
                                                                ('atanascho@gmail.com','zdrasti','Atanas','Yurukov');
+
+INSERT INTO orders (id, user_id, order_date, total_price) VALUES
+                                                              (1, 1, '2025-01-10 10:00:00', 390.00),
+                                                              (2, 2, '2025-01-11 12:00:00', 200.00);
