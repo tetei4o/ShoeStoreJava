@@ -1,8 +1,9 @@
 package org.example.shoestorejava.models;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -12,46 +13,25 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shoe_id", nullable = false)
-    private Shoe shoe;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    private int quantity;
-
-    private Double totalPrice;
-
     private LocalDateTime orderDate;
+
+    private double totalPrice;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderShoe> orderShoes = new ArrayList<>();
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
     }
 
-    public void setShoe(Shoe shoe) {
-        this.shoe = shoe;
-    }
-
-    public Shoe getShoe() {
-        return shoe;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Double getTotalPrice() {
-        return totalPrice;
     }
 
     public User getUser() {
@@ -62,15 +42,27 @@ public class Order {
         this.user = user;
     }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public List<OrderShoe> getOrderShoes() {
+        return orderShoes;
+    }
+
+    public void setOrderShoes(List<OrderShoe> orderShoes) {
+        this.orderShoes = orderShoes;
     }
 }

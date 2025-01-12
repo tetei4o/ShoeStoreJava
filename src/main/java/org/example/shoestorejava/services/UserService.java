@@ -37,10 +37,9 @@ public class UserService {
 
         user = userRepository.save(user);
 
-        // Create shopping cart for new user
-        //ShoppingCart cart = new ShoppingCart();
-        //cart.setUser(user);
-        //cartRepository.save(cart);
+        ShoppingCart cart = new ShoppingCart();
+        cart.setUser(user);
+        cartRepository.save(cart);
 
         return user;
     }

@@ -1,6 +1,7 @@
 package org.example.shoestorejava.services;
 
 import org.example.shoestorejava.models.*;
+import org.example.shoestorejava.repositories.OrderRepository;
 import org.example.shoestorejava.repositories.ShoeRepository;
 import org.example.shoestorejava.repositories.ShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class ShoppingCartService {
 
     @Autowired
     private ShoeRepository shoeRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Transactional
     public void addToCart(Long userId, Long shoeId, int quantity) {
@@ -46,25 +50,37 @@ public class ShoppingCartService {
 
     @Transactional
     public void checkout(Long userId) {
-        ShoppingCart cart = shoppingCartRepository.findByUserId(userId)
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found for user ID: " + userId));
 
+        if (shoppingCart.getItems().isEmpty()) {
+            throw new RuntimeException("Cannot checkout an empty cart");
+        }
+        User user = shoppingCart.getUser();
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        double totalPrice = 0;
+        for (CartItem cartItem : shoppingCart.getItems()) {
+            Shoe shoe = cartItem.getShoe();
 
-        if (cart.getItems().isEmpty()) {
-            throw new RuntimeException("Cart is empty");
+            if (shoe.getStockQuantity() < cartItem.getQuantity()) {
+                throw new RuntimeException("Insufficient stock for shoe: " + shoe.getName());
+            }
+            shoe.setStockQuantity(shoe.getStockQuantity() - cartItem.getQuantity());
+            shoeRepository.save(shoe);
+            OrderShoe orderShoe = new OrderShoe();
+            orderShoe.setOrder(order);
+            orderShoe.setShoe(shoe);
+            orderShoe.setQuantity(cartItem.getQuantity());
+            order.getOrderShoes().add(orderShoe);
+            totalPrice += cartItem.getQuantity() * shoe.getPrice();
         }
 
-        for (CartItem item : cart.getItems()) {
-            Order order = new Order();
-            order.setShoe(item.getShoe());
-            order.setQuantity(item.getQuantity());
-            order.setTotalPrice(item.getShoe().getPrice() * item.getQuantity());
-            order.setOrderDate(LocalDateTime.now());
-            order.setUser(cart.getUser());
-        }
-
-        cart.getItems().clear();
-        shoppingCartRepository.save(cart);
+        order.setTotalPrice(totalPrice);
+        orderRepository.save(order);
+        shoppingCart.getItems().clear();
+        shoppingCartRepository.save(shoppingCart);
     }
 
     private ShoppingCart createCartForUser(Long userId) {
